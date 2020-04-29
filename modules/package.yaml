@@ -1,0 +1,24 @@
+cmd: package
+shortDesc: Installation module 
+description: |
+  This module is useful to install, check and uninstall any packages.
+version: 0.5.0
+commands:
+  - command:
+    usage: 
+      cmd: update
+      shortDesc: Update list of packages and upgrade the system
+      description: |
+        Update the available packages on the target host (e.g. goal package update -s --on <host> ).
+        To use this command into a story you must have NO PASSWD option in sudoers file.
+      category: package
+    options:
+      - name: yes
+        shortname: y
+        desc: "option to yes to update the system in silent mode"
+        substitution: -y
+    systems: 
+      - type: "redhat"
+        cmd: "yum -y update"
+      - type: "debian"
+        cmd: "apt-get update && apt-get $yes upgrade"

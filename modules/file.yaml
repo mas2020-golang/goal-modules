@@ -1,0 +1,56 @@
+cmd: file
+description: |
+  File commands package is a package to work with files and directories.
+  File commands package is a package Lorem
+version: 0.5.0
+commands:
+  - usage:
+      cmd: ls
+      description: |
+        List files or directories, examples:
+        goal file ls -l -o /tmp/file1.txt --on centos-7
+        goal file ls -o /tmp/file1.txt --on centos-7
+      category: files
+    options:
+      - name: ori
+        shortname: o
+        desc: folder or file
+        required: true
+      - name: opt
+        shortname: p
+        desc: "linux ls command options (format -xx, for ex: -la)"
+      - name: la
+        shortname: l
+        desc: "option for the classic ls -la"
+        substitution: -la        
+    systems: 
+      - type: "*"
+        cmd: "ls $la $opt $from"
+  - usage:
+      cmd: copy
+      description: |
+        Copy files or directories, examples:
+        goal file copy -s -o /tmp/file1.txt -d /test --on centos-7
+        goal file copy -st -o /tmp/file1.txt -d /test --on centos-7
+    options:
+      - name: ori
+        shortname: o
+        desc: origin of a file to copy
+        required: true
+      - name: dest
+        shortname: d
+        desc: destination for the copy
+    systems: 
+      - type: "*"
+        cmd: "cp $from $to"
+  - usage:
+      cmd: echo
+      description: Echo command return the request done to the system
+    options:
+      - name: what
+        shortname: w
+        desc: echo input, for example a variabile e.g. "goal file echo -w '$HOME'"
+        required: true
+    systems: 
+      - type: "*"
+        cmd: "echo $what"

@@ -1,0 +1,73 @@
+cmd: service
+shortDesc: Info about the services
+description: |
+  This module is useful to get information about processes and manage them.
+version: 0.5.0
+commands:
+  - command: info
+    usage: 
+      cmd: info
+      shortDesc: Info about single service
+      description: |
+        This command get information on the status of a service, for example:
+        goal service info --name crond --on your-server
+      category: system
+    options:
+      - name: name
+        shortname: n
+        desc: name of the service
+    systems: 
+      - type: "*"
+        cmd: "systemctl status $name.service --no-pager"
+        filters:
+          - pattern: running
+            message: RUNNING
+            color: GREEN
+          - pattern: "(inactive)"
+            message: STOPPED
+            color: RED
+          - pattern: "(not be found)"
+            message: NOT FOUND
+            color: RED
+  - command: list
+    usage:
+      cmd: list
+      shortDesc: List OS services
+      description: |
+        List services
+      category: system
+    systems:
+      - type: "redhat"
+        cmd: "systemctl list-units --no-pager"
+      - type: "debian"
+        cmd: "systemctl list-units --no-pager"
+  - command: start
+    usage:
+      cmd: start
+      shortDesc: Start single service
+      description: |
+        This command start a service using sudo, for example:
+        goal service start --name crond  --on your-server
+      category: system
+    options:
+      - name: name
+        shortname: n
+        desc: name of the service
+    systems:
+      - type: "*"
+        cmd: "sudo systemctl start $name.service"
+  - command: stop
+    usage:
+      cmd: stop
+      shortDesc: Stop single service
+      description: |
+        This command stop a service using sudo, for example:
+        goal service stop --name crond  --on your-server
+      category: system
+    options:
+      - name: name
+        shortname: n
+        desc: name of the service
+    systems:
+      - type: "*"
+        cmd: "sudo systemctl stop $name.service"

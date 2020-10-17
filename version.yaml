@@ -1,0 +1,8 @@
+---
+name: file
+author: "mas2020"
+version: "0.1.0"
+repository: ""
+description: |
+  This package is the main and official that comes with Go-AL. The version of the package must correspond
+  to the tag on the GitHub repository.

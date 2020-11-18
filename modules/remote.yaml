@@ -1,0 +1,51 @@
+---
+name: remote
+author: "@mas2020"
+description: |
+  File commands package is a package to work with files and directories of a remote HOST.
+version: 0.6.0
+commands:
+  - name: ls
+    usage: ls [folder...]
+    alias: list
+    args: ">=1"
+    description: |
+        List files or directories, examples:
+        goal file ls -o -lrt /tmp/file1.txt --on centos-7
+        goal file ls /tmp/file1.txt --on centos-7
+    category: files
+    options:
+      - name: opt
+        shortname: o
+        desc: "other linux ls command options (format -xx, e.g.: -la)"
+    systems: 
+      - type: "debian"
+        cmd: "ls -l $opt"
+      - type: "*"
+        cmd: "ls -l $opt && ls -l $HOME"
+  - name: echo
+    usage: echo [something to echo]
+    description: |
+        Echo command returns the request done to the system, examples:
+        goal echo '$HOME' --on <server>
+        goal echo '$PWD' --on <server>
+    systems: 
+      - type: "*"
+        cmd: "echo"
+  - name: copy
+    usage: copy [origin] [destination]
+    alias: cp
+    args: ">=1"
+    description: |
+      Copy file (or directory) from a remote position to another remote position. This command will prevent
+      overwriting of the destination file in case the file exists.
+      goal file copy /tmp/file.ori /tmp/file.dest --on ubuntu-18
+      goal file copy /home/vagrant/test/ /tmp/ --opt -R --on ubuntu-18
+    category: files
+    options:
+      - name: opt
+        shortname: o
+        desc: "linux standard cp options can be passed"
+    systems:
+      - type: "*"
+        cmd: "cp -n $opt"

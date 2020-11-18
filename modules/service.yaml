@@ -1,73 +1,81 @@
-cmd: service
+---
+name: service
+author: "@mas2020"
 shortDesc: Info about the services
 description: |
-  This module is useful to get information about processes and manage them.
+  This module is useful to get information on processes, disk status, memory occupation...
 version: 0.5.0
 commands:
-  - command: info
-    usage: 
-      cmd: info
-      shortDesc: Info about single service
-      description: |
-        This command get information on the status of a service, for example:
-        goal service info --name crond --on your-server
-      category: system
+  - name: info
+    usage: info
+    shortDesc: Info about single service
+    description: |
+      Start, stop and get information about services
+    category: system
     options:
       - name: name
         shortname: n
-        desc: name of the service
+        desc: status info of a service (e.g. goal system service -i sshd --on yourserver)
     systems: 
       - type: "*"
         cmd: "systemctl status $name.service --no-pager"
         filters:
-          - pattern: running
-            message: RUNNING
+          - pattern: .*running.*
+            message: service is RUNNING
             color: GREEN
-          - pattern: "(inactive)"
-            message: STOPPED
+          - pattern: 'could not be found'
+            message: service not FOUND
             color: RED
-          - pattern: "(not be found)"
-            message: NOT FOUND
-            color: RED
-  - command: list
-    usage:
-      cmd: list
-      shortDesc: List OS services
-      description: |
-        List services
-      category: system
-    systems:
-      - type: "redhat"
-        cmd: "systemctl list-units --no-pager"
-      - type: "debian"
-        cmd: "systemctl list-units --no-pager"
-  - command: start
-    usage:
-      cmd: start
-      shortDesc: Start single service
-      description: |
-        This command start a service using sudo, for example:
-        goal service start --name crond  --on your-server
-      category: system
+  - name: list
+    usage: list
+    shortDesc: List OS services
+    description: |
+      List the services with status == active. To get all services pass --all, to filter for a specific
+      status pass --status <STATUS>. To apply a custom filter on the list use --search <REG-EXP>
+    category: system
     options:
-      - name: name
-        shortname: n
-        desc: name of the service
+      - name: search
+        shortname: s
+        {{/* search options variable */}}
+        {{ $search := index . "--search" }}
+        {{ $s := index . "-s" }}
+        desc: |
+          to filter a list using a regexp with linux grep command, some examples are:
+          service list --on <host> -s '-i httpd'
+          service list --on <host> -s '-v httpd'
+          service list --on <host> -s 'httpd.*$'
+      - name: all
+        shortname: a
+        desc: "to get all the units, active and not"
+        substitution: --all
+      - name: status
+        {{ $status := index . "--status" }}
+        desc: "to get the units in a particular status e.g. loaded, active, inactive. Use --status <STATUS>"
     systems:
       - type: "*"
-        cmd: "sudo systemctl start $name.service"
-  - command: stop
-    usage:
-      cmd: stop
-      shortDesc: Stop single service
-      description: |
-        This command stop a service using sudo, for example:
-        goal service stop --name crond  --on your-server
-      category: system
+        {{ if or $search  $s }}
+          {{ if $status }}
+        cmd: "systemctl list-units $all --state=$status --no-pager | grep $search"
+          {{else}}
+        cmd: "systemctl list-units $all --no-pager | grep $search"
+          {{end}}
+        {{else}}
+          {{ if $status }}
+        cmd: "systemctl list-units $all --state=$status --no-pager"
+          {{else}}
+        cmd: "systemctl list-units $all --no-pager"
+          {{end}}
+        {{end}}
+  - name: test
+    usage: test
+    shortDesc: test
+    description: |
+      test
+    category: system
     options:
-      - name: name
-        shortname: n
-        desc: name of the service
+      - name: status
+        shortname: i
+        desc: status info of a service
     systems:
       - type: "*"
-        cmd: "sudo systemctl stop $name.service"
+        cmd: "$status"

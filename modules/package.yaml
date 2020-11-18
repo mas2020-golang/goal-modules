@@ -1,24 +1,94 @@
-cmd: package
+---
+name: package
+author: "@mas2020"
 shortDesc: Installation module 
 description: |
   This module is useful to install, check and uninstall any packages.
 version: 0.5.0
 commands:
-  - command:
-    usage: 
-      cmd: update
-      shortDesc: Update list of packages and upgrade the system
-      description: |
-        Update the available packages on the target host (e.g. goal package update -s --on <host> ).
-        To use this command into a story you must have NO PASSWD option in sudoers file.
-      category: package
+  - name: update
+    usage: update
+    shortDesc: Update list of packages and upgrade the system
+    description: |
+      Update the available packages on the target host (e.g. goal package update -s --on <host> ).
+      If you type the --name argument, goal will install the specified package
+      To use this command into a story you must have NO PASSWD option in sudoers file.
+      Examples: 
+      goal package update -n nginx
+      goal package update
     options:
       - name: yes
         shortname: y
-        desc: "option to yes to update the system in silent mode"
+        desc: "to update the system in silent mode"
+        substitution: -y
+      - name: name
+        shortname: n
+        desc: the package name to update
+    systems: 
+      - type: "redhat"
+        cmd: "yum $yes update $name"
+      - type: "debian"
+        cmd: "apt-get update && apt-get $yes upgrade $name"
+  - name: info
+    usage: info
+    shortDesc: Info on a package installed (or to install) on the system
+    description: |
+      Info on a package installed on the system or to install. The information shown may vary depending on the system.
+      Example: goal package info --name nginx
+    options:
+      - name: name
+        shortname: n
+        desc: the package name to search for
+        required: true
+    systems: 
+      - type: "redhat"
+        cmd: "yum list installed | grep $name && yum list available | grep $name"
+      - type: "debian"
+        cmd: "apt-get update && apt-cache show $name"
+  - name: clean
+    usage: clean
+    shortDesc: Remove the cache for packages and dependencies no more needed.
+    description: |
+      Once you clean the system you remove:
+      - the cache files used by the OS to install the package and the dependecies of it
+      - the dependencies installed and more needed
+      Example: goal package clean
+    systems: 
+      - type: "redhat"
+        cmd: "yum clean all"
+      - type: "debian"
+        cmd: "apt-get clean && apt-get autoremove"
+  - name: remove
+    usage: remove
+    shortDesc: Remove the package from the system
+    description: |
+      Remove the package from the system
+      Example: goal package remove -n nginx
+    options:
+      - name: name
+        shortname: n
+        desc: the package name to remove
+    systems: 
+      - type: "redhat"
+        cmd: "yum remove $name"
+      - type: "debian"
+        cmd: "apt-get purge $name"
+  - name: install
+    usage: install
+    shortDesc: Install the specified package on the system
+    description: |
+      Install the specified package on the system
+      Example: goal package install -n nginx
+    options:
+      - name: name
+        shortname: n
+        desc: the package name to install
+      - name: yes
+        shortname: y
+        desc: "to install in silent mode"
         substitution: -y
     systems: 
       - type: "redhat"
-        cmd: "yum -y update"
+        cmd: "yum install $yes $name"
       - type: "debian"
-        cmd: "apt-get update && apt-get $yes upgrade"
+        cmd: "apt-get install $yes $name"

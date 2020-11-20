@@ -22,7 +22,7 @@ commands:
       - type: "debian"
         cmd: "ls -l $opt"
       - type: "*"
-        cmd: "ls -l $opt && ls -l $HOME"
+        cmd: "ls -l $opt"
   - name: echo
     usage: echo [something to echo]
     description: |

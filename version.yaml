@@ -1,7 +1,7 @@
 ---
 name: file
 author: "mas2020"
-version: "0.1.0"
+version: "0.1.0-dev"
 repository: ""
 description: |
   This package is the main and official that comes with Go-AL. The version of the package must correspond

@@ -49,3 +49,17 @@ commands:
     systems:
       - type: "*"
         cmd: "cp -n $opt"
+  - name: cmd
+    usage: cmd [gnu-command]
+    alias: command
+    args: ">=1"
+    description: |
+      Execute gnu commands through ssh. This is a generic command that permits to execute
+      whatever needs to the remote instance/s. The command has to be enclosed by '', otherwise
+      it will parsed from Go-AL.
+      Example:
+      goal remote cmd 'ls -la  /tmp' --on bitbucket
+    category: files
+    systems:
+      - type: "*"
+        cmd: ""

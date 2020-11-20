@@ -63,3 +63,16 @@ commands:
     systems:
       - type: "*"
         cmd: ""
+  - name: info
+    usage: info
+    alias: 
+    description: |
+      Generic info on remote system (disk space usage, memory usage, connected users...)
+      Example:
+      goal remote info --on myhost
+    category: files
+    systems:
+      - type: "redhat"
+        cmd: 'echo -e "=> Linux distro:\n$(cat /etc/*-release)" &&echo -e "\n=> File system info:\n$(df -h)" && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'
+      - type: "*"
+        cmd: 'echo -e "=> Linux distro:\n--" && df -h && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'

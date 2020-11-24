@@ -38,21 +38,21 @@ commands:
       - name: search
         shortname: s
         {{/* search options variable */}}
-        {{ $search := index . "--search" }}
-        {{ $s := index . "-s" }}
+        {{ $search := index .CmdFlags "--search" }}
+        {{ $s := index .CmdFlags "-s" }}
         desc: |
           to filter a list using a regexp with linux grep command, some examples are:
           service list --on <host> -s '-i httpd'
           service list --on <host> -s '-v httpd'
           service list --on <host> -s 'httpd.*$'
       - name: all
-        {{ $all := index . "--all" }}
-        {{ $a := index . "-a" }}
+        {{ $all := index .CmdFlags "--all" }}
+        {{ $a := index .CmdFlags "-a" }}
         shortname: a
         desc: "to get all the units, active and not"
         substitution: --all
       - name: status
-        {{ $status := index . "--status" }}
+        {{ $status := index .CmdFlags "--status" }}
         desc: "to get the units in a particular status e.g. loaded, active, inactive. Use --status <STATUS>"
     systems:
       - type: "redhat-old"
@@ -93,8 +93,8 @@ commands:
       - name: search
         shortname: s
         {{/* search options variable */}}
-        {{ $search := index . "--search" }}
-        {{ $s := index . "-s" }}
+        {{ $search := index .CmdFlags "--search" }}
+        {{ $s := index .CmdFlags "-s" }}
         desc: |
           to filter a list using a regexp with linux grep command, some examples are:
           service list-target --on <host> -s '-i httpd'
@@ -103,8 +103,8 @@ commands:
       - name: active
         shortname: a
         {{/* search options variable */}}
-        {{ $active := index . "--active" }}
-        {{ $a := index . "-a" }}
+        {{ $active := index .CmdFlags "--active" }}
+        {{ $a := index .CmdFlags "-a" }}
         desc: |
           to filter the active targets
         substitution: " "

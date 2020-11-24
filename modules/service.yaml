@@ -15,6 +15,7 @@ commands:
     options:
       - name: name
         shortname: n
+        required: true
         desc: status info of a service (e.g. goal system service -i sshd --on yourserver)
     systems: 
       - type: "*"

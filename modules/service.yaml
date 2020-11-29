@@ -16,7 +16,7 @@ commands:
       - name: name
         shortname: n
         required: true
-        desc: status info of a service (e.g. goal system service -i sshd --on yourserver)
+        desc: status info of a service (e.g. goal system service -n sshd --on yourserver)
     systems: 
       - type: "*"
         cmd: "systemctl status $name.service --no-pager"

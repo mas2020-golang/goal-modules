@@ -84,3 +84,15 @@ commands:
           echo -e "\e[94m=> Connected users:\e[0m\n$(who)"
       - type: "*"
         cmd: 'echo -e "=> Linux distro:\n$(hostnamectl)" && df -h && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'
+  - name: read
+    usage: read [file]
+    alias: rd
+    args: ">=1"
+    description: |
+        Read a file and show the content on the standard output
+        goal read /tmp/file
+        goal read /tmp/file
+    category: files
+    systems: 
+      - type: "*"
+        cmd: echo -e "\e[94m=> File content:\e[0m" && more

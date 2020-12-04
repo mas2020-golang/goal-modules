@@ -92,6 +92,8 @@ commands:
         Read a file and show the content on the standard output
         goal read /tmp/file
         goal read /tmp/file
+
+        Remote command used is 'more'
     category: files
     systems: 
       - type: "*"

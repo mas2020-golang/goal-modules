@@ -19,10 +19,8 @@ commands:
         shortname: o
         desc: "other linux ls command options (format -xx, e.g.: -la)"
     systems: 
-      - type: "debian"
-        cmd: "ls -l $opt"
       - type: "*"
-        cmd: "ls -l $opt"
+        cmd: "ls -l --color $opt"
   - name: echo
     usage: echo [something to echo]
     description: |

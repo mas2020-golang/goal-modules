@@ -73,6 +73,16 @@ commands:
     category: files
     systems:
       - type: "redhat"
-        cmd: 'echo -e "=> Linux distro:\n$(cat /etc/*-release)" &&echo -e "\n=> File system info:\n$(df -h)" && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'
+        cmd: |
+          echo -e "\e[94m=> Linux distro:\e[0m\n$(hostnamectl)\n" && \
+          echo -e "\e[94m=> File system info:\e[0m\n$(df -h)\n" && \
+          echo -e "\e[94m=> Memory statistic:\e[0m\n $(free -m)\n && \
+          echo -e "\e[94m=> Connected users:\e[0m\n$(who)"
+      - type: "debian"
+        cmd: |
+          echo -e "\e[94m=> Linux distro:\e[0m\n$(hostnamectl)\n" && \
+          echo -e "\e[94m=> File system info:\e[0m\n$(df -h)\n" && \
+          echo -e "\e[94m=> Memory statistic:\e[0m\n $(free -m)\n" && \
+          echo -e "\e[94m=> Connected users:\e[0m\n$(who)"
       - type: "*"
-        cmd: 'echo -e "=> Linux distro:\n--" && df -h && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'
+        cmd: 'echo -e "=> Linux distro:\n$(hostnamectl)" && df -h && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'

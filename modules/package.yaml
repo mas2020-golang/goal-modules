@@ -42,16 +42,22 @@ commands:
         required: true
     systems: 
       - type: "redhat"
-        cmd: "yum list installed | grep $name && yum list available | grep $name"
+        cmd: |
+          yum list installed | grep $name --color=always; \
+          N=$(yum list installed | grep $name | wc -l); \
+          if [ $N -gt 0 ]; then \
+            printf "[\e[32;1mPACKAGE INSTALLED?\e[0m]\n\n"; \
+            else printf "[\e[31;1mPACKAGE NOT INSTALLED\e[0m]\n\n"; \
+          fi
       - type: "debian"
         cmd: |
           printf "\e[93m==> updating the system to check packages...\e[0m\n" && \
           apt-get update 1> /dev/null && apt-cache show $name && \
           dpkg -l | \
           if grep -q $name; then \
-            printf "[\e[32;1mPACKAGE INSTALLED\e[0m]\n"; \
+            printf "[\e[32;1mPACKAGE INSTALLED\e[0m]\n\n"; \
             apt list -a $name; \
-            else printf "[\e[31mPACKAGE NOT INSTALLED\e[0m]\n"; \
+            else printf "[\e[31;1mPACKAGE NOT INSTALLED\e[0m]\n\n"; \
           fi
   - name: clean
     usage: clean
@@ -99,4 +105,4 @@ commands:
       - type: "redhat"
         cmd: "yum install $yes $name"
       - type: "debian"
-        cmd: "apt-get install $yes $name"
+        cmd: "apt-get update && apt-get install $yes $name"

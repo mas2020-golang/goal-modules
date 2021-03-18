@@ -44,7 +44,15 @@ commands:
       - type: "redhat"
         cmd: "yum list installed | grep $name && yum list available | grep $name"
       - type: "debian"
-        cmd: "apt-get update && apt-cache show $name"
+        cmd: |
+          printf "\e[93m==> updating the system to check packages...\e[0m\n" && \
+          apt-get update 1> /dev/null && apt-cache show $name && \
+          dpkg -l | \
+          if grep -q $name; then \
+            printf "[\e[32;1mPACKAGE INSTALLED\e[0m]\n"; \
+            apt list -a $name; \
+            else printf "[\e[31mPACKAGE NOT INSTALLED\e[0m]\n"; \
+          fi
   - name: clean
     usage: clean
     shortDesc: Remove the cache for packages and dependencies no more needed.

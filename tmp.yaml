@@ -17,7 +17,7 @@ commands:
         shortname: n
         required: true
         desc: status info of a service (e.g. goal system service -n sshd --on yourserver)
-    systems: 
+    systems:
       - type: "*"
         cmd: "systemctl status $name.service --no-pager"
         filters:
@@ -38,51 +38,36 @@ commands:
     options:
       - name: search
         shortname: s
-        {{/* search options variable */}}
-        {{ $search := index .CmdFlags "--search" }}
-        {{ $s := index .CmdFlags "-s" }}
+
+
+
         desc: |
           to filter a list using a regexp with linux grep command, some examples are:
           service list --on <host> -s '-i httpd'
           service list --on <host> -s '-v httpd'
           service list --on <host> -s 'httpd.*$'
       - name: all
-        {{ $all := index .CmdFlags "--all" }}
-        {{ $a := index .CmdFlags "-a" }}
+
+
         shortname: a
         desc: "to get all the units, active and not"
         substitution: --all
       - name: status
-        {{ $status := index .CmdFlags "--status" }}
+
         desc: "to get the units in a particular status e.g. loaded, active, inactive. Use --status <STATUS>"
     systems:
       - type: "redhat-old"
-        {{ if or $search  $s }}
-        cmd: "service --status-all | grep $search"
-          {{ if $status }}
-        cmd: "service --status-all | grep $status | grep $search"
-          {{end}}   
-        {{else}} # not search
-          {{ if $status }}
-        cmd: "service --status-all | grep $status"
-          {{else}}
+          # not search
+
         cmd: "service --status-all"
-          {{end}}
-        {{end}}
+
+
       - type: "*"
-        {{ if or $search  $s }}
-          {{ if $status }}
-        cmd: "systemctl list-units $all --state=$status --no-pager | grep $search"
-          {{else}}
-        cmd: "systemctl list-units $all --no-pager | grep $search"
-          {{end}}
-        {{else}}
-          {{ if $status }}
-        cmd: "systemctl list-units $all --state=$status --no-pager"
-          {{else}}
+
+
         cmd: "systemctl list-units $all --no-pager"
-          {{end}}
-        {{end}}
+
+
   - name: list-target
     usage: list-target
     shortDesc: List OS target for the system
@@ -93,9 +78,9 @@ commands:
     options:
       - name: search
         shortname: s
-        {{/* search options variable */}}
-        {{ $search := index .CmdFlags "--search" }}
-        {{ $s := index .CmdFlags "-s" }}
+
+
+
         desc: |
           to filter a list using a regexp with linux grep command, some examples are:
           service list-target --on <host> -s '-i httpd'
@@ -103,27 +88,19 @@ commands:
           service list-target <host> -s 'httpd.*$'
       - name: active
         shortname: a
-        {{/* search options variable */}}
-        {{ $active := index .CmdFlags "--active" }}
-        {{ $a := index .CmdFlags "-a" }}
+
+
+
         desc: |
           to filter the active targets
         substitution: " "
     systems:
       - type: "*"
-        {{ if or $search  $s }}
-          {{ if or $active  $a }}
-        cmd: "systemctl list-units --type=target | grep $search"
-          {{else}}      
-        cmd: "systemctl list-unit-files --type=target | grep $search "
-          {{end}}  
-        {{else}}
-          {{ if or $active  $a }}
-        cmd: "systemctl list-units --type=target"
-          {{else}}      
+
+
         cmd: "systemctl list-unit-files --type=target"
-          {{end}}  
-        {{end}}
+
+
   - name: start
     usage: start <service-name>
     alias:
@@ -138,27 +115,8 @@ commands:
         desc: the name of the service to start
     systems:
       - type: redhat,debian
-        cmd: |
-          systemctl start $name.service; \
-          if [ $? -eq 0 ]; then \
-           printf "\e[92m[OK]\e[0m $name has been successfully started\n"; \
-          fi
-  - name: stop
-    usage: stop <service-name>
-    alias:
-    shortDesc: Stop a systemd service
-    category:
-    description: |
-      Stop a systemd service. For the older system (with init) Go-AL uses `service` instead of `systemd`.
-    options:
-      - name: name
-        shortname: n
-        required: true
-        desc: the name of the service to start
-    systems:
-      - type: redhat,debian
-        cmd: |
-          systemctl stop $name.service; \
-          if [ $? -eq 0 ]; then \
-           printf "\e[92m[OK]\e[0m $name has been successfully stopped\n"; \
-          fi
+        cmd: systemctl start $name.service
+        filters: (optional) filters for the output of the command
+                   - pattern: pattern expression for the filter
+                   messsage: the output message to show if the pattern matches with the command output
+                   color: output message color (RED, GREEN, YELLOW)

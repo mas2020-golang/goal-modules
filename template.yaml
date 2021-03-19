@@ -1,0 +1,27 @@
+---
+name: name of the module command
+author: name of the module’s author
+version: version of the module
+shortDesc: short module description
+description: |
+  Module decription
+commands: (list of commands)
+  - name: the name of the command (e.g copy, del, list...)
+    usage: the use of the command, e.g. ls [folder]
+    alias: command aliases separated by comma (e.g. copy,cp)
+    shortDesc: short command description
+    category: category (for future use)
+    description: long command description
+    options:
+      - name: option name
+        shortname: option short name
+        desc: option description
+        required: true|false
+        substitution: if set, the value of substitution will replace the single option name without considering the value of the flag.
+    systems:
+      - type: redhat|debian|* (type of host where to execute cmd)
+        cmd: ssh cmd to execute
+        filters: (optional) filters for the output of the command
+                   - pattern: pattern expression for the filter
+                   messsage: the output message to show if the pattern matches with the command output
+                   color: output message color (RED, GREEN, YELLOW)

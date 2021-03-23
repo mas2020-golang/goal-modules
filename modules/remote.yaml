@@ -6,34 +6,37 @@ description: |
 version: 0.6.0
 commands:
   - name: ls
-    usage: ls [folder...]
+    usage: ls [options] <folder> [...folder]
     alias: list
     args: ">=1"
+    shortDesc: list file or directories
     description: |
-        List files or directories, examples:
-        goal file ls -o -lrt /tmp/file1.txt --on centos-7
-        goal file ls /tmp/file1.txt --on centos-7
+      List files or directories, examples:
+      goal file ls -o -lrt /tmp/file1.txt --on centos-7
+      goal file ls /tmp/file1.txt --on centos-7
     category: files
     options:
       - name: opt
         shortname: o
         desc: "other linux ls command options (format -xx, e.g.: -la)"
-    systems: 
+    systems:
       - type: "*"
         cmd: "ls -l --color $opt"
   - name: echo
-    usage: echo [something to echo]
+    usage: echo <something-to-echo>
+    shortDesc: useful echoing command
     description: |
-        Echo command returns the request done to the system, examples:
-        goal echo '$HOME' --on <server>
-        goal echo '$PWD' --on <server>
-    systems: 
+      Echo command returns the request done to the system, examples:
+      goal echo '$HOME' --on <server>
+      goal echo '$PWD' --on <server>
+    systems:
       - type: "*"
         cmd: "echo"
   - name: copy
-    usage: copy [origin] [destination]
+    usage: copy [options] <origin> <destination>
     alias: cp
     args: ">=1"
+    shortDesc: copy remote file into and from remote host
     description: |
       Copy file (or directory) from a remote position to another remote position. This command will prevent
       overwriting of the destination file in case the file exists.
@@ -48,13 +51,14 @@ commands:
       - type: "*"
         cmd: "cp -n $opt"
   - name: cmd
-    usage: cmd [gnu-command]
+    usage: cmd <gnu-command>
     alias: command
     args: ">=1"
+    shortDesc: execute gnu commands through ssh
     description: |
       Execute gnu commands through ssh. This is a generic command that permits to execute
       whatever needs to the remote instance/s. The command has to be enclosed by '', otherwise
-      it will parsed from Go-AL.
+      it will be parsed from Go-AL.
       Example:
       goal remote cmd 'ls -la  /tmp' --on bitbucket
     category: files
@@ -63,7 +67,8 @@ commands:
         cmd: ""
   - name: info
     usage: info
-    alias: 
+    alias:
+    shortDesc: show some info of the remote host
     description: |
       Generic info on remote system (disk space usage, memory usage, connected users...)
       Example:
@@ -72,29 +77,42 @@ commands:
     systems:
       - type: "redhat"
         cmd: |
-          echo -e "\e[94m=> Linux distro:\e[0m\n$(hostnamectl)\n" && \
-          echo -e "\e[94m=> File system info:\e[0m\n$(df -h)\n" && \
-          echo -e "\e[94m=> Memory statistic:\e[0m\n $(free -m)\n && \
-          echo -e "\e[94m=> Connected users:\e[0m\n$(who)"
+          printf "\e[94m=> Linux distro:\e[0m\n$(hostnamectl)\n" && \
+          printf "\e[94m=> File system info:\e[0m\n$(df -h)\n" && \
+          printf "\e[94m=> Memory statistic:\e[0m\n $(free -m)\n && \
+          printf "\e[94m=> Connected users:\e[0m\n$(who)"
       - type: "debian"
         cmd: |
-          echo -e "\e[94m=> Linux distro:\e[0m\n$(hostnamectl)\n" && \
-          echo -e "\e[94m=> File system info:\e[0m\n$(df -h)\n" && \
-          echo -e "\e[94m=> Memory statistic:\e[0m\n $(free -m)\n" && \
-          echo -e "\e[94m=> Connected users:\e[0m\n$(who)"
+          printf "\e[94m=> Linux distro:\e[0m\n$(hostnamectl)\n" && \
+          printf "\e[94m=> File system info:\e[0m\n$(df -h)\n" && \
+          printf "\e[94m=> Memory statistic:\e[0m\n $(free -m)\n" && \
+          printf "\e[94m=> Connected users:\e[0m\n$(who)"
       - type: "*"
         cmd: 'echo -e "=> Linux distro:\n$(hostnamectl)" && df -h && echo -e "\n=> Memory statistic:" && free -m && echo -e "\n=> Connected users: \n$(who)"'
   - name: read
-    usage: read [file]
+    usage: read <file>
     alias: rd
     args: ">=1"
+    shortDesc: read a file and show the content
     description: |
-        Read a file and show the content on the standard output
-        goal read /tmp/file
-        goal read /tmp/file
+      Read a file and show the content on the standard output
+      goal read /tmp/file
+      goal read /tmp/file
 
-        Remote command used is 'more'
+      Remote command used is 'more'
     category: files
-    systems: 
+    systems:
       - type: "*"
         cmd: echo -e "\e[94m=> File content:\e[0m" && more
+  - name: tail
+    usage: tail <file>
+    alias: rd
+    args: ">=1"
+    shortDesc: tail a remote file
+    description: |
+      Tail a file and show the content on the standard output
+      goal remote tail /tmp/file. Remote gnu command used is 'tail -f'.
+    category: files
+    systems:
+      - type: "*"
+        cmd: tail -f

@@ -1,29 +1,16 @@
-# README #
+# GoAL Modules
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+This is the official repository for GoAL modules. For major information related to how to install
+and what is a module refer to the official goal documentation.
 
 ### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+Create your own modules or add commands to the official ones!
+Then fork this project, add your code and make a Pull Request on this repository. We will be glad to take
+a look and let you know.
+Thanks in advance for the contribution.
 
 ### Who do I talk to? ###
 
 * Repo owner or admin
-* Other community or team contact
+* Open an issue in the apposite section

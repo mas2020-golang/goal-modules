@@ -103,7 +103,10 @@ commands:
     category: files
     systems:
       - type: "*"
-        cmd: echo -e "\e[94m=> File content:\e[0m" && more
+        cmd: |
+          ACTIVITY="\e[1;34m➜\e[1;97m"
+          GREEN="\e[0;32m"
+          printf "${ACTIVITY} File content:${GREEN}\n" && more
   - name: tail
     usage: tail <file>
     alias: rd

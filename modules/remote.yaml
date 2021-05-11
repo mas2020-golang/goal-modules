@@ -4,6 +4,8 @@ author: "@mas2020"
 description: |
   File commands package is a package to work with files and directories of a remote HOST.
 version: 0.6.0
+variables:
+  ACTIVITY: "\e[1;34m➜\e[1;97m"
 commands:
   - name: ls
     usage: ls [options] <folder> [...folder]
@@ -119,3 +121,34 @@ commands:
     systems:
       - type: "*"
         cmd: tail -f
+  - name: find
+    usage: find [expressions]
+    alias: fd
+    args: ">=1"
+    shortDesc: find file/s on the remote server
+    description: |
+      Find the file set with the --name flag into the --where location using the expressions
+      given as arguments.
+      Expressions are free arguments related to the find GNU command (-type, -user etc...).
+
+      Examples:
+        goal file find --where /tmp --name test
+        goal file find --where /tmp --name test -type f
+        goal remote find -n Dockerfile -w '$HOME' --on docker-manager
+        goal remote find -n Dockerfile -w '$HOME' --on docker-manager
+        goal remote find --su -w /var -n term.log --cargs '-user root'
+    category: files
+    options:
+      - name: name
+        shortname: n
+        desc: the name to search remotely
+      - name: where
+        shortname: w
+        desc: the folder where to search the file in
+      - name: cargs
+        desc: the remote command arguments that will be used as an addiction to the standard ones (e.g. -type, -ctime, -user)
+    systems:
+      - type: "*"
+        cmd: |
+          GREEN="\e[0;32m"; printf "${GREEN}"
+          find $where -name $name $cargs

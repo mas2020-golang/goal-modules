@@ -122,14 +122,15 @@ commands:
       - type: "*"
         cmd: tail -f
   - name: find
-    usage: find [expressions]
+    usage: find
     alias: fd
     args: ">=1"
     shortDesc: find file/s on the remote server
     description: |
       Find the file set with the --name flag into the --where location using the expressions
       given as arguments.
-      Expressions are free arguments related to the find GNU command (-type, -user etc...).
+      --cargs are expressions related to the find GNU command (-type, -user etc...). Remember
+      to enclose in single quotes.
 
       Examples:
         goal file find --where /tmp --name test

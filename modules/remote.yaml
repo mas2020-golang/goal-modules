@@ -5,7 +5,9 @@ description: |
   File commands package is a package to work with files and directories of a remote HOST.
 version: 0.6.0
 variables:
-  ACTIVITY: "\e[1;34m➜\e[1;97m"
+  ACTIVITY: '\e[1;34m➜\e[1;97m'
+  GREEN: '\e[0;32m'
+  test: sm
 commands:
   - name: ls
     usage: ls [options] <folder> [...folder]
@@ -130,7 +132,7 @@ commands:
       Find the file set with the --name flag into the --where location using the expressions
       given as arguments.
       --cargs are expressions related to the find GNU command (-type, -user etc...). Remember
-      to enclose in single quotes.
+      to enclose values into 'single quotes'.
 
       Examples:
         goal file find --where /tmp --name test
@@ -151,5 +153,5 @@ commands:
     systems:
       - type: "*"
         cmd: |
-          GREEN="\e[0;32m"; printf "${GREEN}"
-          find $where -name $name $cargs
+          printf "$ACTIVITY your search of '$name' has found:\n$GREEN"
+          $sudo find $where -name $name $cargs

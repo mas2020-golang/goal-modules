@@ -26,15 +26,14 @@ commands:
         desc: the package name to update
     systems: 
       - type: "redhat"
-        cmd: "yum $yes update $name"
+        cmd: "yum ${yes} update ${name}"
       - type: "debian"
-        cmd: "apt-get update && apt-get $yes upgrade $name"
+        cmd: "apt-get update && apt-get ${yes} upgrade ${name}"
   - name: info
     usage: info
     shortDesc: Info on a package installed (or to install) on the system
     description: |
-      Info on a package installed on the system or to install. The command exits with 0 in case the service is
-      found otherwise exits with 1.
+      Info on a package installed on the system or to install. The information shown may vary depending on the system.
       Example: goal package info --name nginx
     options:
       - name: name
@@ -44,22 +43,21 @@ commands:
     systems: 
       - type: "redhat"
         cmd: |
-          rpm -qa | if grep -q $name; then
-            printf "[\e[32;1mPACKAGE INSTALLED\e[0m]\n";
-            exit 0;
-          else 
-            printf "[\e[31;1mPACKAGE NOT INSTALLED\e[0m]\n";  
-            exit 1;
+          yum list installed | grep ${name} --color=always; \
+          N=$(yum list installed | grep ${name} | wc -l); \
+          if [ $N -gt 0 ]; then \
+            printf "[\e[32;1mPACKAGE INSTALLED?\e[0m]\n\n"; \
+            else printf "[\e[31;1mPACKAGE NOT INSTALLED\e[0m]\n\n"; \
           fi
       - type: "debian"
         cmd: |
+          printf "\e[93m==> updating the system to check packages...\e[0m\n" && \
+          apt-get update 1> /dev/null && apt-cache show ${name} && \
           dpkg -l | \
-          if grep -q $name; then \
-              printf "[\e[32;1mPACKAGE INSTALLED\e[0m]\n"; \
-              exit 0;
-          else 
-              printf "[\e[31;1mPACKAGE NOT INSTALLED\e[0m]\n"; \
-              exit 1          
+          if grep -q ${name}; then \
+            printf "[\e[32;1mPACKAGE INSTALLED\e[0m]\n\n"; \
+            apt list -a ${name}; \
+            else printf "[\e[31;1mPACKAGE NOT INSTALLED\e[0m]\n\n"; \
           fi
   - name: clean
     usage: clean
@@ -86,9 +84,9 @@ commands:
         desc: the package name to remove
     systems: 
       - type: "redhat"
-        cmd: "yum remove $name"
+        cmd: "yum remove ${name}"
       - type: "debian"
-        cmd: "apt-get purge $name"
+        cmd: "apt-get purge ${name}"
   - name: install
     usage: install
     shortDesc: Install the specified package on the system
@@ -105,6 +103,6 @@ commands:
         substitution: -y
     systems: 
       - type: "redhat"
-        cmd: "yum install $yes $name"
+        cmd: "yum install ${yes} ${name}"
       - type: "debian"
-        cmd: "apt-get update && apt-get install $yes $name"
+        cmd: "apt-get update && apt-get install ${yes} ${name}"

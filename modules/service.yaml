@@ -19,7 +19,7 @@ commands:
         desc: status info of a service (e.g. goal system service -n sshd --on yourserver)
     systems: 
       - type: "*"
-        cmd: "systemctl status $name.service --no-pager"
+        cmd: "systemctl status ${name}.service --no-pager"
         filters:
           - pattern: .*running.*
             message: service is RUNNING
@@ -37,15 +37,15 @@ commands:
     category: system
     options:
       - name: search
-        shortname: s
+        #shortname: s
         {{/* search options variable */}}
         {{ $search := index .CmdFlags "--search" }}
         {{ $s := index .CmdFlags "-s" }}
         desc: |
           to filter a list using a regexp with linux grep command, some examples are:
-          service list --on <host> -s '-i httpd'
-          service list --on <host> -s '-v httpd'
-          service list --on <host> -s 'httpd.*$'
+          service list --on <host> --search '-i httpd'
+          service list --on <host> --search '-v httpd'
+          service list --on <host> --search 'httpd.*$'
       - name: all
         {{ $all := index .CmdFlags "--all" }}
         {{ $a := index .CmdFlags "-a" }}
@@ -64,7 +64,7 @@ commands:
           {{end}}   
         {{else}} # not search
           {{ if $status }}
-        cmd: "service --status-all | grep $status"
+        cmd: "service --status-all | grep ${status}"
           {{else}}
         cmd: "service --status-all"
           {{end}}
@@ -72,15 +72,15 @@ commands:
       - type: "*"
         {{ if or $search  $s }}
           {{ if $status }}
-        cmd: "systemctl list-units $all --state=$status --no-pager | grep $search"
+        cmd: "systemctl list-units ${all} --state=${status} --no-pager | grep ${search}"
           {{else}}
-        cmd: "systemctl list-units $all --no-pager | grep $search"
+        cmd: "systemctl list-units ${all} --no-pager | grep ${search}"
           {{end}}
         {{else}}
           {{ if $status }}
-        cmd: "systemctl list-units $all --state=$status --no-pager"
+        cmd: "systemctl list-units ${all} --state=${status} --no-pager"
           {{else}}
-        cmd: "systemctl list-units $all --no-pager"
+        cmd: "systemctl list-units ${all} --no-pager"
           {{end}}
         {{end}}
   - name: list-target
@@ -92,15 +92,15 @@ commands:
     category: system
     options:
       - name: search
-        shortname: s
+        #shortname: s
         {{/* search options variable */}}
         {{ $search := index .CmdFlags "--search" }}
         {{ $s := index .CmdFlags "-s" }}
         desc: |
           to filter a list using a regexp with linux grep command, some examples are:
-          service list-target --on <host> -s '-i httpd'
-          service list-target <host> -s '-v httpd'
-          service list-target <host> -s 'httpd.*$'
+          service list-target --on <host> --search '-i httpd'
+          service list-target <host> --search '-v httpd'
+          service list-target <host> --search 'httpd.*$'
       - name: active
         shortname: a
         {{/* search options variable */}}
@@ -113,9 +113,9 @@ commands:
       - type: "*"
         {{ if or $search  $s }}
           {{ if or $active  $a }}
-        cmd: "systemctl list-units --type=target | grep $search"
+        cmd: "systemctl list-units --type=target | grep ${search}"
           {{else}}      
-        cmd: "systemctl list-unit-files --type=target | grep $search "
+        cmd: "systemctl list-unit-files --type=target | grep ${search} "
           {{end}}  
         {{else}}
           {{ if or $active  $a }}
@@ -139,9 +139,9 @@ commands:
     systems:
       - type: redhat,debian
         cmd: |
-          systemctl start $name.service; \
+          ${sudo} systemctl start ${name}.service; \
           if [ $? -eq 0 ]; then \
-           printf "\e[92m[OK]\e[0m $name has been successfully started\n"; \
+           printf "\e[92m[OK]\e[0m ${name} has been successfully started\n"; \
           fi
   - name: stop
     usage: stop <service-name>
@@ -158,7 +158,7 @@ commands:
     systems:
       - type: redhat,debian
         cmd: |
-          systemctl stop $name.service; \
+          ${sudo} systemctl stop ${name}.service; \
           if [ $? -eq 0 ]; then \
-           printf "\e[92m[OK]\e[0m $name has been successfully stopped\n"; \
+           printf "\e[92m[OK]\e[0m ${name} has been successfully stopped\n"; \
           fi

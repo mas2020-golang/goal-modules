@@ -20,12 +20,11 @@ commands:
       goal file ls /tmp/file1.txt --on centos-7
     category: files
     options:
-      - name: opt
-        shortname: o
-        desc: "other linux ls command options (format -xx, e.g.: -la)"
+      - name: cargs
+        desc: "other linux ls command options (format -xx, e.g.: -la). Enclose the value into single quotes"
     systems:
       - type: "*"
-        cmd: "ls -l --color ${opt}"
+        cmd: "ls -l --color ${cargs}"
   - name: echo
     usage: echo <something-to-echo>
     shortDesc: useful echoing command

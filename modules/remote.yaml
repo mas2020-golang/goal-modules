@@ -107,7 +107,7 @@ commands:
     systems:
       - type: "*"
         cmd: |
-          printf "${ACTIVITY} File content:${GREEN}\n" && more
+          more
   - name: tail
     usage: tail <file>
     alias: rd
